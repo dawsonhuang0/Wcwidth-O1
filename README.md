@@ -65,50 +65,33 @@ When a new Unicode version is released, the lookup table must be regenerated to 
 ### 1. Prerequisites
 
 - glibc-based Linux distro (e.g. Debian).
-- Any C compiler (e.g. GCC, Clang).
 
-### 2. Clone glibc to local
+### 2. Generate new lookup table
 
 ```bash
-git clone https://sourceware.org/git/glibc.git
+./genTable.sh
 ```
 
-### 3. Generate new lookup table
-
-In the same directory as `glibc/`, compile `genTable.c`.  
-Using GCC as an example:
+If your environment is not glibc-based, you'll see:
 
 ```bash
-gcc genTable.c -o genTable
-```
-
-If the compilation succeeds, `genTable` will be generated in the current directory. If not, ensure all [prerequisites](#1-prerequisites) are satisfied.
-
-Then run:
-
-```bash
-./genTable
+[ WARNING ] Please compile on a glibc-based Linux distro (e.g. Debian).
 ```
 
 Once the generation is complete, you should see:
 
 ```bash
-table.ts generated successfully.
+[ SUCCESS ] table.ts generated successfully.
 ```
 
-and you're set to proceed to [step 4](#4-replace-files).
+### 3. Replace files
 
-If your environment is not glibc-based, you'll see:
+Copy the generated `table.ts` into `src/`:
 
 ```bash
-warning: This program requires glibc, please compile on a glibc-based Linux distro (e.g. Debian).
+cp table.ts src/
 ```
 
-Switching to a glibc-based Linux distro should fix the issue.
-
-### 4. Replace files
-
-Copy the generated `table.ts` into `src/`.  
 The lookup table update is then complete.
 
 
