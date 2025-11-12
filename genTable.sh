@@ -17,7 +17,7 @@ has() {
 
 install() {
   if ! has "$1"; then
-    $SUDO apt install "$1"
+    $SUDO apt install -y "$1"
   fi
 }
 
