@@ -3,15 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <wchar.h>
+#include <locale.h>
+
 #if defined(__GLIBC__)
-  #include "glibc/wcsmbs/wchar.h"
-  #include "glibc/locale/locale.h"
   #define SUPPORT_GLIBC 1
 #else
-  #include <wchar.h>
-  #include <locale.h>
   #define SUPPORT_GLIBC 0
 #endif
+
+#define ERROR "\033[48;5;9m\033[38;5;16m ERROR \033[49;39m"
+#define WARNING "\033[48;5;11m\033[38;5;16m WARNING \033[49;39m"
+#define SUCCESS "\033[48;5;10m\033[38;5;16m SUCCESS \033[49;39m"
 
 // helpers
 static void pushRange(
@@ -25,23 +28,21 @@ int main(void) {
   if (!SUPPORT_GLIBC) {
     fprintf(
       stderr,
-      "\033[1;33mwarning:\033[0m "
-      "This program requires \033[1mglibc\033[0m, "
-      "please compile on a glibc-based Linux distro (e.g. Debian).\n"
+      WARNING" Please compile on a glibc-based Linux distro (e.g. Debian).\n"
     );
     return 1;
   }
 
   // initialization
   if (!setlocale(LC_ALL, "C.UTF-8")) {
-    fprintf(stderr, "C.UTF-8 not found\n");
+    fprintf(stderr, ERROR" C.UTF-8 not found.\n");
     return 1;
   }
 
   FILE *out = fopen("table.ts", "w");
 
   if (!out) {
-    fprintf(stderr, "fopen() failed\n");
+    fprintf(stderr, ERROR" fopen() failed.\n");
     return 1;
   }
 
@@ -118,7 +119,7 @@ int main(void) {
           range_capacity = &range_capacity2;
         } else {
           fprintf(
-            stderr, "Unexpected width %d at U+%06X\n", curr_range_width,
+            stderr, ERROR "Unexpected width %d at U+%06X.\n", curr_range_width,
             curr_range_start
           );
           return 1;
@@ -246,7 +247,7 @@ int main(void) {
     "\nexport const TABLE: Uint8Array = LOOKUP_TABLE;\n"
   );
 
-  printf("table.ts generated successfully.\n");
+  printf("\n"SUCCESS" table.ts generated successfully.\n");
 
   fclose(out);
   return 0;
@@ -259,7 +260,7 @@ static void pushRange(
     *capacity = *capacity ? *capacity * 2 : 1024;
     *arr = realloc(*arr, *capacity * sizeof **arr);
     if (!*arr) {
-      perror("realloc failed\n");
+      perror(ERROR" realloc failed.\n");
       exit(EXIT_FAILURE);
     }
   }
@@ -274,7 +275,7 @@ static void pushCP(unsigned int **arr, size_t *count, size_t *capacity, unsigned
     *capacity = *capacity ? *capacity * 2 : 512;
     *arr = realloc(*arr, *capacity * sizeof **arr);
     if (!*arr) {
-      perror("realloc failed\n");
+      perror(ERROR" realloc failed.\n");
       exit(EXIT_FAILURE);
     }
   }
