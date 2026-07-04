@@ -205,7 +205,7 @@ int main(void) {
     "\n    }\n"
     "\n    if (baseCp <= 0x10FFFF) {"
     "\n      leafBlocks.push(leaf);"
-    "\n      L2tab[i2] = leafBlocks.length; // temporary index"
+    "\n      L2tab[i2] = leafBlocks.length;"
     "\n    }"
     "\n  }\n"
     "\n  L2Blocks.push(L2tab);"
