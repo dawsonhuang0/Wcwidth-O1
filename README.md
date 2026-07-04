@@ -6,6 +6,16 @@ A TypeScript/JavaScript implementation of glibc’s `wcwidth(3)` and `wcswidth(3
 Conforms to [POSIX.1-2008 (IEEE Std 1003.1)](https://pubs.opengroup.org/onlinepubs/9699919799/) for 
 terminal column width calculation.
 
+---
+
+### ⚠️ **NOT** always accurate for challenging characters
+
+`wcwidth(3)` is a per-code-point API and this package faithfully follows it.  
+**HOWEVER**, multi-code-point sequences (emoji ZWJ, variation selectors, flags) may measure wider than what modern terminals draw.  
+If you need to handle them, check out [char-width](https://www.npmjs.com/package/char-width).
+
+---
+
 ### Superior Performance
 - ⚡️ Instant *O*(1) lookup time
 - 🌏 Full Unicode 17.0 coverage
